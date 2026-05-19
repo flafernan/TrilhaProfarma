@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  #----------------------------------------------------
+  # BANCO DE DADOS: Postgres
+  #----------------------------------------------------
+  postgres-db:
+    image: postgres:16-alpine
+    container_name: profarma-postgres
+    environment:
+      POSTGRES_USER: profarma_user
+      POSTGRES_PASSWORD: ProfarmaPassword123!
+      POSTGRES_DB: profarma_local_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - profarma-network
+
+  #----------------------------------------------------
+  # SUA API .NET (Do Bloco 1)
+  #----------------------------------------------------
+  api:
+    container_name: profarma-api-compose
+    # O "build" aponta para onde está o Dockerfile lá na pasta do Bloco 1
+    build:
+      context: ../dia1-bloco1/ProfarmaApi
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+      # Hierarquia de configuração: Passando a Connection String por Variável de Ambiente
+      - ConnectionStrings__DefaultConnection=Host=postgres-db;Port=5432;Database=profarma_local_db;Username=profarma_user;Password=ProfarmaPassword123!
+    depends_on:
+      - postgres-db
+    networks:
+      - profarma-network
+
+networks:
+  profarma-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

@@ -1,0 +1,32 @@
+## Visual Studio Core / VS Code
+.vscode/
+.vs/
+*.suo
+*.user
+*.ionide
+
+## Compilação e Binários (.NET)
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+bld/
+
+## Pacotes baixados automaticamente (NuGet)
+*.nuget.props
+*.nuget.targets
+packages/
+
+## Sistema Operacional
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+## Kubernetes / Docker / Local Secrets
+.env
+*.local.properties
+# Descomente a linha abaixo se você salvar arquivos com senhas locais que não quer no GitHub:
+# *.secret.yaml
