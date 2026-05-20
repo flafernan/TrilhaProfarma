@@ -27,20 +27,20 @@ stages:
           latest
 
 - stage: Deploy
-    displayName: 'Stage de Deploy'
-    dependsOn: Build
-    jobs:
-    - deployment: DeployToAKS
-      displayName: 'Job DeployToAKS'
-      environment: 'aks-sandbox'
-      pool:
-        vmImage: 'ubuntu-latest'
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-            - script: |
-                echo "Simulando a conexao com o AKS..."
-                echo "Aplicando os manifestos da TrilhaProfarma no namespace-trilha..."
-                echo "Deploy realizado com sucesso para o ambiente de Sandbox!"
-              displayName: 'Simulação de Deploy no AKS (Evidência)'
+  displayName: 'Stage de Deploy'
+  dependsOn: Build
+  jobs:
+  - deployment: DeployToAKS
+    displayName: 'Job DeployToAKS'
+    environment: 'aks-sandbox'
+    pool:
+      vmImage: 'ubuntu-latest'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: |
+              echo "Simulando a conexao com o AKS..."
+              echo "Aplicando os manifestos da TrilhaProfarma no namespace-trilha..."
+              echo "Deploy realizado com sucesso para o ambiente de Sandbox!"
+            displayName: 'Simulação de Deploy no AKS (Evidência)'
