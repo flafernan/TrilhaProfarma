@@ -40,7 +40,7 @@ stages:
         deploy:
           steps:
           - script: |
-              echo "Acessando o cluster Kubernetes sandbox..."
+              echo "Conectando ao cluster Kubernetes sandbox..."
               echo ""
               echo "==> EVIDENCIA (2): kubectl get pods <=="
               echo "NAME                               READY   STATUS    RESTARTS   AGE"
