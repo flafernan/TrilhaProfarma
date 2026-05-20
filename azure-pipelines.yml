@@ -32,7 +32,7 @@ stages:
   jobs:
   - deployment: DeployToAKS
     displayName: 'Deploy para o Cluster Sandbox'
-    environment: 'aks-sandbox.namespace-trilha'
+    environment: 'aks-sandbox'
     strategy:
       runOnce:
         deploy:
