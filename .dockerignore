@@ -1,0 +1,11 @@
+# Ignorar pastas de histórico/exercícios antigos que conflitam com o build
+dia1-bloco1/
+dia1-bloco2/
+dia1-bloco3/
+dia1-bloco4/
+
+# Ignorar pastas padrões do .NET
+bin/
+obj/
+.git/
+.vs/
