@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: profarma-api-config
+spec:
+  # ConfigMaps não usam "spec", os dados ficam direto no bloco "data"
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  TZ: "America/Sao_Paulo"

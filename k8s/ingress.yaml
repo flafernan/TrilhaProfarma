@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: profarma-api-ingress
+spec:
+  ingressClassName: nginx # Define formalmente o controlador sem depender de annotations
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: profarma-api-service
+            port:
+              number: 80

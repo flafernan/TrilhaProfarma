@@ -1,0 +1,42 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profarma-api-deployment
+  labels:
+    app: profarma-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: profarma-api
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: profarma-api
+    spec:
+      containers:
+      - name: api
+        image: acrprofarmatrilha.azurecr.io/profarma-api:v1
+        ports:
+        - containerPort: 8080
+        env:
+        - name: TZ
+          valueFrom:
+            configMapKeyRef:
+              name: profarma-api-config
+              key: TZ
+        - name: ASPNETCORE_ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: profarma-api-config
+              key: ASPNETCORE_ENVIRONMENT
+        - name: ConnectionStrings__DefaultConnection
+          valueFrom:
+            secretKeyRef:
+              name: profarma-api-secret
+              key: DefaultConnection

@@ -1,0 +1,43 @@
+trigger:
+  branches:
+    include: [develop, main]
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  imageRepo: 'profarma/api-trilha'
+  tag: '$(Build.BuildId)'
+
+stages:
+- stage: Build
+  displayName: 'Stage de Build e Push'
+  jobs:
+  - job: BuildAndPush
+    displayName: 'Build Docker Image'
+    steps:
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'acr-sandbox-svc'
+        repository: $(imageRepo)
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        tags: |
+          $(tag)
+          latest
+
+- stage: Deploy
+  displayName: 'Stage de Deploy no AKS'
+  dependsOn: Build
+  jobs:
+  - deployment: DeployToAKS
+    displayName: 'Deploy para o Cluster Sandbox'
+    environment: 'aks-sandbox.namespace-trilha'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: KubernetesManifest@1
+            inputs:
+              action: 'deploy'
+              manifests: 'k8s/*.yaml'
