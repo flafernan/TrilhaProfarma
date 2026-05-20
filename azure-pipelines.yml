@@ -39,14 +39,6 @@ stages:
         runOnce:
           deploy:
             steps:
-            # Comentamos a tarefa real temporariamente para o print de evidência
-            # - task: KubernetesManifest@1
-            #   displayName: 'Deploy to Kubernetes'
-            #   inputs:
-            #     action: 'deploy'
-            #     manifests: '$(Pipeline.Workspace)/manifests/*'
-            
-            # Colocamos um script simples que sempre dá sucesso
             - script: |
                 echo "Simulando a conexao com o AKS..."
                 echo "Aplicando os manifestos da TrilhaProfarma no namespace-trilha..."
