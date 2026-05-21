@@ -9,17 +9,6 @@ variables:
   imageRepo: 'profarma/api-trilha'
   tag: '$(Build.BuildId)'
 
-trigger:
-  branches:
-    include: [develop, main]
-
-pool:
-  vmImage: 'ubuntu-latest'
-
-variables:
-  imageRepo: 'profarma/api-trilha'
-  tag: '$(Build.BuildId)'
-
 stages:
 - stage: Build
   displayName: 'Stage de Build e Push'
