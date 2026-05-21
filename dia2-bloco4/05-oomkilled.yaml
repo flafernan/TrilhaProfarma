@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-erro-oom
+  labels:
+    app: erro-oom
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: erro-oom
+  template:
+    metadata:
+      labels:
+        app: erro-oom
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:alpine
+        # REMOVIDO o comando de estresse para voltar ao comportamento padrão do Nginx
+        resources:
+          requests:
+            memory: "64Mi"   # Mínimo garantido realista
+            cpu: "50m"
+          limits:
+            memory: "128Mi"  # Limite máximo seguro para produção
+            cpu: "100m"

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-erro-crash
+  labels:
+    app: erro-crash
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: erro-crash
+  template:
+    metadata:
+      labels:
+        app: erro-crash
+    spec:
+      containers:
+      - name: ubuntu-container
+        image: ubuntu:latest
+        # COMANDO CORRIGIDO: Agora ele exibe uma mensagem de sucesso e fica segurando o container vivo
+        command: ["/bin/sh", "-c", "echo 'Container iniciado com sucesso!'; sleep 3600"]

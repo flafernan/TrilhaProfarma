@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-erro-imagem
+  labels:
+    app: erro-imagem
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: erro-imagem
+  template:
+    metadata:
+      labels:
+        app: erro-imagem
+    spec:
+      containers:
+      - name: nginx-container
+        # IMAGEM CORRIGIDA: Usando uma tag válida e existente
+        image: nginx:alpine
+        ports:
+        - containerPort: 80

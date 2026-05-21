@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-erro-sintaxe
+  labels:
+    app: erro-sintaxe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: erro-sintaxe
+  template:
+    metadata:
+      labels:
+        app: erro-sintaxe
+    spec:
+      containers:
+      - name: nginx-container
+        # IMAGEM CORRIGIDA: Sintaxe 100% limpa e dentro dos padrões OCI
+        image: nginx:alpine
+        ports:
+        - containerPort: 80

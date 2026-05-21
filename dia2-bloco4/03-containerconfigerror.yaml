@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-erro-config
+  labels:
+    app: erro-config
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: erro-config
+  template:
+    metadata:
+      labels:
+        app: erro-config
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:alpine
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              # Forçando o erro apontando para um recurso que não foi criado
+              name: configuracao-que-nao-existe
+              key: db_link
