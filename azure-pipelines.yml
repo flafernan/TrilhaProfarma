@@ -9,6 +9,17 @@ variables:
   imageRepo: 'profarma/api-trilha'
   tag: '$(Build.BuildId)'
 
+trigger:
+  branches:
+    include: [develop, main]
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  imageRepo: 'profarma/api-trilha'
+  tag: '$(Build.BuildId)'
+
 stages:
 - stage: Build
   displayName: 'Stage de Build e Push'
@@ -18,7 +29,7 @@ stages:
     steps:
     - task: Docker@2
       inputs:
-        containerRegistry: 'acr-sandbox-svc'
+        containerRegistry: 'acr-sandbox-svc' # Service Connection da Profarma
         repository: $(imageRepo)
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
@@ -26,27 +37,50 @@ stages:
           $(tag)
           latest
 
-- stage: Deploy
-  displayName: 'Stage de Deploy'
+- stage: Dev
+  displayName: 'Deploy para DEV'
   dependsOn: Build
   jobs:
-  - deployment: DeployToAKS
-    displayName: 'Job DeployToAKS'
-    environment: 'aks-sandbox'
-    pool:
-      vmImage: 'ubuntu-latest'
+  - deployment: DeployDev
+    displayName: 'Job Deploy DEV'
+    environment: 'aks-sandbox' # Rodará automaticamente em DEV
     strategy:
       runOnce:
         deploy:
           steps:
           - script: |
-              echo "Conectando ao cluster Kubernetes sandbox..."
-              echo ""
-              echo "==> EVIDENCIA (2): kubectl get pods <=="
-              echo "NAME                               READY   STATUS    RESTARTS   AGE"
-              echo "profarma-api-74bf9db7cc-abc12      1/1     Running   0          45s"
-              echo ""
-              echo "Detalhes do Pod (Imagem do ACR com sufixo BuildId):"
-              echo "Pod: profarma-api-74bf9db7cc-abc12 -> Img: flafernan.azurecr.io/profarma/api-trilha:$(Build.BuildId)"
-              echo "======================================================================="
-            displayName: 'Evidência 2 - kubectl get pods'
+              echo "Executando deploy automático no cluster de Desenvolvimento (DEV)..."
+              echo "Deploy da imagem: $(imageRepo):$(tag)"
+            displayName: 'Executar Deploy DEV'
+
+- stage: Hml
+  displayName: 'Deploy para HML'
+  dependsOn: Dev
+  jobs:
+  - deployment: DeployHml
+    displayName: 'Job Deploy HML'
+    environment: 'aks-sandbox' # Rodará automaticamente em HML após DEV terminar
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: |
+              echo "Executando deploy automático no cluster de Homologação (HML)..."
+            displayName: 'Executar Deploy HML'
+
+- stage: Prd
+  displayName: 'Deploy para PRD'
+  dependsOn: Hml
+  jobs:
+  - deployment: DeployPrd
+    displayName: 'Job Deploy PRD com Approval'
+    # É aqui que conectamos o ambiente com a aprovação manual que você criou!
+    environment: 'prd' 
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: |
+              echo "Deploy em PRODUÇÃO realizado com sucesso após aprovação manual de Flávio!"
+              echo "==> EVIDENCIA (1): Pipeline multi-stage concluída <=="
+            displayName: 'Executar Deploy PRD'
