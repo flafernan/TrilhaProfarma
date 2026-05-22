@@ -6,7 +6,8 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  imageRepo: 'profarma/api-trilha'
+  # 1. Atualizamos o repositório para apontar para o seu NOVO ACR gerado pelo Bicep
+  imageRepo: 'acrkk64y4rci6sqi.azurecr.io/profarma/api-trilha'
   tag: '$(Build.BuildId)'
 
 stages:
