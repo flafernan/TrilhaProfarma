@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-deployment
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: api-trilha-profarma
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          env:
+            # --- Padrão 1: Suas variáveis originais ---
+            - name: DB_HOST
+              value: {{ .Values.database.host | quote }}
+            - name: DB_PORT
+              value: {{ .Values.database.port | quote }}
+            - name: DB_NAME
+              value: {{ .Values.database.name | quote }}
+            - name: DB_USER
+              value: {{ .Values.database.user | quote }}
+            - name: DB_PASSWORD
+              value: {{ .Values.database.password | quote }}
+
+            # --- Padrão 2: Formato Avançado do .NET Configuration (Secções) ---
+            - name: Database__Host
+              value: {{ .Values.database.host | quote }}
+            - name: Database__Port
+              value: {{ .Values.database.port | quote }}
+            - name: Database__Name
+              value: {{ .Values.database.name | quote }}
+            - name: Database__User
+              value: {{ .Values.database.user | quote }}
+            - name: Database__Password
+              value: {{ .Values.database.password | quote }}
+
+            # --- Padrão 3: Connection String Completa (O tiro de misericórdia do .NET) ---
+            - name: ConnectionStrings__DefaultConnection
+              value: "Host={{ .Values.database.host }};Port={{ .Values.database.port }};Database={{ .Values.database.name }};Username={{ .Values.database.user }};Password={{ .Values.database.password }};"
+
+            # --- Configurações do Datadog ---
+            - name: DD_ENV
+              value: "prod"
+            - name: DD_SERVICE
+              value: "api-trilha-profarma"
+            - name: DD_VERSION
+              value: "1.0.0"

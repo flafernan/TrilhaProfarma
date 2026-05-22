@@ -1,0 +1,18 @@
+# Configurações globais do nosso pacote
+replicaCount: 2
+
+image:
+  repository: acrkk64y4rci6sqi.azurecr.io/profarma/api-trilha
+  tag: latest
+
+service:
+  type: ClusterIP
+  port: 80
+
+# --- CONFIGURAÇÃO DO BANCO LOCAL NO CLUSTER ---
+database:
+  host: "postgres-local-postgresql"
+  port: "5432"
+  name: "profarma_db"
+  user: "postgres"
+  password: "SenhaSegura123!"
