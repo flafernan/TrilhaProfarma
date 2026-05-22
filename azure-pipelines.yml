@@ -6,8 +6,8 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  # 1. Atualizamos o repositório para apontar para o seu NOVO ACR gerado pelo Bicep
-  imageRepo: 'acrkk64y4rci6sqi.azurecr.io/profarma/api-trilha'
+  # AJUSTADO: Deixe apenas o nome do repositório. O link do ACR já vem pela Service Connection!
+  imageRepo: 'profarma/api-trilha'
   tag: '$(Build.BuildId)'
 
 stages:
@@ -19,7 +19,7 @@ stages:
     steps:
     - task: Docker@2
       inputs:
-        containerRegistry: 'acr-sandbox-svc' # Service Connection da Profarma
+        containerRegistry: 'acr-sandbox-svc' # Nova Service Connection recriada
         repository: $(imageRepo)
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
@@ -33,7 +33,7 @@ stages:
   jobs:
   - deployment: DeployDev
     displayName: 'Job Deploy DEV'
-    environment: 'aks-sandbox' # Rodará automaticamente em DEV
+    environment: 'aks-sandbox'
     strategy:
       runOnce:
         deploy:
@@ -49,7 +49,7 @@ stages:
   jobs:
   - deployment: DeployHml
     displayName: 'Job Deploy HML'
-    environment: 'aks-sandbox' # Rodará automaticamente em HML após DEV terminar
+    environment: 'aks-sandbox'
     strategy:
       runOnce:
         deploy:
@@ -64,7 +64,6 @@ stages:
   jobs:
   - deployment: DeployPrd
     displayName: 'Job Deploy PRD com Approval'
-    # É aqui que conectamos o ambiente com a aprovação manual que você criou!
     environment: 'prd' 
     strategy:
       runOnce:
